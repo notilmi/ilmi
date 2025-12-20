@@ -53,6 +53,11 @@ function Code({ children, ...props }) {
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }
 
+function Pre({ children, ...props }) {
+  console.log(props)
+  return <pre {...props}>{children}</pre>
+}
+
 function slugify(str) {
   return str
     .toString()
@@ -96,6 +101,7 @@ let components = {
   Image: RoundedImage,
   a: CustomLink,
   code: Code,
+  pre: Pre,
   Table,
 }
 
