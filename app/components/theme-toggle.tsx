@@ -18,12 +18,12 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="aspect-square size-10 p-2 hover:cursor-pointer"
+      className="aspect-square size-10 p-2 hover:cursor-pointer transition-all ease-in-out"
     >
         {theme === "dark" ? (
-            <MoonIcon className="h-6 w-6" />
+            <MoonIcon className="h-4 w-4" />
         ) : (
-            <SunIcon className="h-6 w-6" />
+            <SunIcon className="h-4 w-4" />
         )}
     </button>
   );

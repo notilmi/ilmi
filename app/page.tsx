@@ -4,7 +4,8 @@ export default function Page() {
   return (
     <section>
       <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
-        Ilmi a.k.a Terence
+        Achmad Ilmi <br />
+        <span className="text-muted-foreground text-lg">a.k.a Terence</span>
       </h1>
       <p className="mb-4">
         {`Software engineer specializing in Domain Driven Design and Test Driven Development. 

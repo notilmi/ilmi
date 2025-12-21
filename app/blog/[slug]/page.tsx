@@ -57,7 +57,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function Blog({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Blog({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   let post = getBlogPosts().find((post) => post.slug === slug);
 
@@ -93,9 +97,7 @@ export default async function Blog({ params }: { params: Promise<{ slug: string 
         {post.metadata.title}
       </h1>
       <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-        <p className="text-sm">
-          {formatDate(post.metadata.publishedAt)}
-        </p>
+        <p className="text-sm">{formatDate(post.metadata.publishedAt)}</p>
       </div>
       <article className="prose">
         <CustomMDX source={post.content} />
