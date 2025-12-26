@@ -1,0 +1,36 @@
+---
+title: "Interface: The Unspoken Hero"
+date: "2025-12-26"
+description: "Exploring the crucial role of interfaces in software development and how they help to scale applications effectively."
+---
+
+![Thumbnail](/blog/interface-the-unspoken-hero/thumbnail.jpg)
+
+Let's face it, your startup hustler sometimes might be an asshole. 
+They want you to move fast, ship features, and of course make the product scale.
+
+There's one time when i built a startup with my co-founder, we were moving fast.
+First week we got 50 users, second week 120 users, fifth week 1000 users (it's fine), seventh week 1200 users (still fine), 
+and then the eighth week we got 5000 users. 
+
+Database queries sweats, server slowdowns, the app start to lag, and users are NOT happy with it.
+
+And then we realized
+
+> Dude, have you implemented working cache mechanism?
+
+That was the moment we realized that we didn't have a peroper mechanism our caching layer.
+We were so focused on shipping features that we overlooked the importance of having a well-defined interface for our caching system.
+
+But thank god. We had an interface for our data access layer.
+Because of that, we started working to implement how can we cache data without changing the rest of the application.
+
+Interfaces are the unsung heroes of software development. They provide a contract that defines how different
+parts of a system interact with each other. By defining clear interfaces,
+developers can work on different components independently, making it easier to scale and maintain applications.
+
+In our case, having a well-defined interface for our data access layer allowed us to implement a caching mechanism without
+changing the rest of the application. This not only improved performance but also made it easier to maintain and 
+scale our application as we grew.
+
+Don't forget to define clear interfaces in your applications boys, abstraction is the key to scalability and maintainability.
