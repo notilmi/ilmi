@@ -1,0 +1,140 @@
+---
+title: "You Need This Spider-Sense If You Are Learning Software Engineering"
+publishedAt: '2025-12-29'
+summary: "How to develop an intuition for spotting potential issues or bad practice when learning software engineering."
+---
+
+![Illustration](/blog/software-engineer-spider-sense/thumbnail.png)
+
+As an active university student who also active in Software Engineering career.
+I realized that there is something that always missig when i see my fellow friends learning how to code.
+That is the "Spider-Sense" to spot potential issues or bad practices in code.
+
+Let's take this code example of connecting a Java program to database that our lecturer gave us:
+
+```java
+import org.jspecify.annotations.Nullable;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public final class TodokuDatabase {
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/todoku-db";
+    private static final String USER = "root";
+    private static final String PASSWORD = "example-root-pw";
+
+    @Nullable
+    public static Connection getConnection( ) throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+
+            return DriverManager.getConnection(DATABASE_URL, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.err.println("JDBC Driver not found.");
+        }
+        return null;
+    }
+}
+```
+
+It seems fine and nothing wrong with it right? I mean how come our lecturer gave us a bad code example?
+Well, if you have that "Spider-Sense" you would immediately spot some potential issues with this code:
+- There is no singleton pattern implemented for the database connection. Every time `getConnection()` is called, a new connection is created which can lead to resource exhaustion.
+- There is no connection pooling mechanism. Creating and closing database connections is expensive in terms of performance.
+- The database credentials are hardcoded in the class, which is a security risk. They should be externalized to a configuration file or environment variables.
+
+But Terence, how can i notice this? I'm just a beginner, I don't have that "Spider-Sense" yet.
+
+The key is to always question the code you see. Ask yourself:
+- Is this code safe?
+- Is this code efficient?
+- Is this code maintainable?
+- Can this code be readable by other people (even my future self)?
+- Are there any best practices that are not being followed here?
+
+By constantly asking these questions, you will start to develop that "Spider-Sense" for spotting potential issues in code.
+
+Because at the end of the day, as a Software Engineer we always wanted to write code that is not only **functional**
+but also **safe**, **efficient**, and **maintainable** for further development plus safe and easy to read for another developer.
+
+Anyway here's the improved version of the code above with connection pooling and externalized configuration:
+
+```java
+package org.ilmi.database;
+
+import org.jspecify.annotations.Nullable;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public final class TodokuDatabase {
+    // Uses environment variables for configuration
+    private static final String DATABASE_URL = getEnvOrThrow("TODOKU_DB_URL");
+    private static final String USER = getEnvOrThrow("TODOKU_DB_USER");
+    private static final String PASSWORD = getEnvOrThrow("TODOKU_DB_PASSWORD");
+
+    // Singleton instance of the database connection
+    private static Connection INSTANCE;
+
+    private TodokuDatabase() {
+        // Private constructor to prevent instantiation
+    }
+
+    public static Connection getInstance() throws SQLException {
+        // Making sure we only have one connection instance (Singleton Pattern)
+        if (INSTANCE == null || INSTANCE.isClosed()) {
+            // Only create a new connection if there isn't one or if it's closed
+            INSTANCE = getConnection();
+        }
+        return INSTANCE;
+    }
+
+    // Helper method to get environment variable or throw an exception if not set
+    private static String getEnvOrThrow(String name) {
+       String value = System.getenv(name);
+        if (value == null) {
+            throw new IllegalStateException("Environment variable not set: " + name);
+        }
+        return value;
+    }
+
+    // Method to create a new database connection
+    @Nullable
+    public static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+
+            return DriverManager.getConnection(DATABASE_URL, USER, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.err.println("JDBC Driver not found.");
+        }
+        return null;
+    }
+}
+```
+
+'Wait a minute, where is the connection pooling mechanism? '
+That's right because that's another topic that i will discuss in another blog post stay tune 😊.
+
+'But Terence... How can i know all these best practices and all this patterns?'
+The answer is simple, keep learning and practicing.
+Read books, articles, and blog posts about software engineering best practices.
+
+Quick tips to develop your "Spider-Sense":
+- Make learning your daily habit. Every day i always make sure that i learn something new about software engineering.
+- Be hungry for knowledge. Always seek to understand why certain practices are recommended.
+- Start a project. The more you code, the more you will encounter different scenarios and challenges.
+- Review other people's code. This will expose you to different coding styles and practices.
+- Join developer communities. Engage in discussions and learn from experienced developers.
+
+With time and experience, your "Spider-Sense" will become sharper, and you'll be able to 
+spot potential issues and bad practices in code more easily, and of course become a Software Engineer like you dreamt
+of when you choose your degree in Computer Science.
+
+Happy coding and keep that Spider-Sense tingling! 🕷️💻
