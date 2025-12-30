@@ -1,9 +1,17 @@
 @import 'tailwindcss';
 
 ::selection {
-  background-color: #47a3f3;
-  color: #fefefe;
+  background-color: #e6f0ff;
+  color: #0f172a;
 }
+
+@media (prefers-color-scheme: dark) {
+  ::selection {
+    background-color: #4c97f8; /* matches dark palette */
+    color: #ffffff;
+  }
+}
+
 
 :root {
   --sh-class: #2d5e9d;
@@ -146,4 +154,18 @@ table {
 
 .title {
   text-wrap: balance;
+}
+
+/* Math rendering tweaks */
+.prose .katex-display {
+  /* Center block/standalone math */
+  text-align: center;
+  /* Make display math larger than inline */
+  font-size: 1.25em;
+  margin: 1em 0;
+}
+
+.prose .katex {
+  /* Keep inline math at normal size */
+  font-size: 1.25em;
 }

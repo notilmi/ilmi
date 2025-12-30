@@ -6,6 +6,7 @@ type Metadata = {
   publishedAt: string
   summary: string
   image?: string
+  tags?: string[]
 }
 
 function parseFrontmatter(fileContent: string) {
@@ -18,9 +19,41 @@ function parseFrontmatter(fileContent: string) {
 
   frontMatterLines.forEach((line) => {
     let [key, ...valueArr] = line.split(': ')
-    let value = valueArr.join(': ').trim()
-    value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value
+    let raw = valueArr.join(': ').trim()
+    let k = key.trim() as keyof Metadata
+
+    // Special-case arrays like tags: ['a', 'b']
+    if (k === 'tags') {
+      // Remove surrounding [ ] then split by comma
+      let inner = raw.replace(/^\[|\]$/g, '')
+      let tags = inner
+        .split(',')
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0)
+        .map((t) => t.replace(/^['"](.*)['"]$/, '$1'))
+      metadata.tags = tags
+      return
+    }
+
+    // Default to string value, strip surrounding quotes
+    let value = raw.replace(/^['"](.*)['"]$/, '$1')
+    switch (k) {
+      case 'title':
+        metadata.title = value
+        break
+      case 'publishedAt':
+        metadata.publishedAt = value
+        break
+      case 'summary':
+        metadata.summary = value
+        break
+      case 'image':
+        metadata.image = value
+        break
+      default:
+        // ignore unknown keys
+        break
+    }
   })
 
   return { metadata: metadata as Metadata, content }

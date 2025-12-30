@@ -3,6 +3,15 @@ import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { highlight } from 'sugar-high'
 import React from 'react'
+// KaTeX styles are required for proper math rendering
+import 'katex/dist/katex.min.css'
+
+import remarkGfm from 'remark-gfm'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import remarkToc from 'remark-toc'
+import rehypeKatex from 'rehype-katex'
+import remarkMath from 'remark-math'
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -54,7 +63,6 @@ function Code({ children, ...props }) {
 }
 
 function Pre({ children, ...props }) {
-  console.log(props)
   return <pre {...props}>{children}</pre>
 }
 
@@ -108,6 +116,20 @@ let components = {
 export function CustomMDX(props) {
   return (
     <MDXRemote
+    options={{
+      mdxOptions: {
+        remarkPlugins: [
+            // Adds support for GitHub Flavored Markdown
+            remarkGfm,
+            // generates a table of contents based on headings
+            remarkToc,
+            // Adds support for LaTeX math syntax
+            remarkMath,
+          ],
+          // These work together to add IDs and linkify headings
+          rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings, rehypeKatex],
+      }
+    }}
       {...props}
       components={{ ...components, ...(props.components || {}) }}
     />
