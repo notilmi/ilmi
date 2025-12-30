@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { CustomMDX } from "app/components/mdx";
 import { formatDate, getBlogPosts } from "app/blog/utils";
-import { serialize } from 'next-mdx-remote/serialize'
 import { baseUrl } from "app/sitemap";
 
 export async function generateStaticParams() {
