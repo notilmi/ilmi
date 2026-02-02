@@ -1,0 +1,35 @@
+---
+title: "Authentication Is More Than I Thought"
+publishedAt: '2026-02-02'
+summary: "I always thought authentication was just authentication itself and nothing more. Turns out, I was wrong."
+tags: ['technical']
+---
+
+![Authentication](/blog/2026-02-02-authentication-is-more-than-i-think/thumbnail.png)
+
+TLDR; Authentication works differently in enterprise environments compared to startup domains. It's more than just authentication itself.
+
+I remember back when i started learning about software engineering, I always been paranoid about authentication.
+To me, authentication is just the most important part of any application that requires user login. So I spent over 9 months
+to learn everything about authentication, from OAuth2, OpenID Connect, SSO, JWT, and many more. Even I personally could built
+a full fledged authentication system by myself from scratch.
+
+The project I've built / worked with mostly leaned towards startup domains. But, after working in a more enterprise environment, 
+I realized that authentication is more than just authentication itself. Authentication is just one piece of the puzzle. 
+In enterprise applications, authentication is often tightly coupled with authorization, user management, auditing, and compliance requirements.
+
+For example, in an enterprise setting, authentication mechanisms need to support complex user roles and permissions,
+integration with existing identity management systems (like LDAP or Active Directory), and adherence to strict security policies.
+This means that authentication solutions must be flexible and customizable to meet the specific needs of the organization.
+
+Moreover, enterprises often require robust auditing and logging capabilities to track authentication events for security and compliance purposes.
+This adds another layer of complexity to the authentication process, as it involves not only verifying user identities but also ensuring that all actions are properly recorded and monitored.
+
+This experience has taught me that authentication is not just about verifying who a user is, but also about how that identity fits into a larger system of security and access control.
+In conclusion, while my initial understanding of authentication was limited to the technical aspects of user verification,
+my experience in enterprise environments has broadened my perspective. Authentication is a multifaceted process that encompasses various components beyond just the act of logging in.
+It's a critical part of a comprehensive security strategy that requires careful consideration and integration with other systems.
+
+So, for those of you who are diving into the world of authentication, remember that it's more than just the technical implementation.
+It's about understanding the broader context in which authentication operates and how it interacts with other aspects of security and user management.
+Embrace the complexity, and you'll be better equipped to design and implement effective authentication solutions that meet the needs of modern applications.
