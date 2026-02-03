@@ -12,7 +12,10 @@ export default function Page() {
         Passionate about advocating and building scalable and maintainable applications. Posting about tech and my life.`}
       </p>
       <div className="my-8">
-        <BlogPosts />
+        <div className="flex flex-col gap-4">
+          <h2 className="text-xl font-semibold">My Blog</h2>
+          <BlogPosts />
+        </div>
       </div>
     </section>
   );
