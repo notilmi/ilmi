@@ -1,0 +1,217 @@
+---
+title: "Vibe Coding Sucks, Only If You Didn't Know This"
+publishedAt: '2026-03-15'
+summary: "Vibe coding is a popular approach to software development that emphasizes creativity and intuition. However, it can be frustrating and unproductive if you don't know how to harness its power effectively."
+tags: ['technical']
+---
+
+TL;DR: AI Sucks at guessing, please give it more context and details to work with.
+
+These days who didn't know about vibe coding? It's a popular approach to software development 
+that emphasizes creativity and intuition. However, it can be frustrating and unproductive 
+if you don't know how to harness its power effectively.
+
+I'm a software engineer who mostly works with enterprise software which emphasizes on reliability and maintainability. 
+It's safe to say I have my own standard way of writing code and I don't like to deviate from it.
+But when I tried vibe coding, I found myself struggling to find the right balance between creativity and structure.
+
+At first, it felt like magic.
+I typed a few sentences, and suddenly I got a whole feature, a whole file, sometimes even a whole refactor.
+But after a few iterations, I realized something:
+
+When AI is wrong, it is not *a little wrong*.
+It is wrong in a way that creates a lot of cleanup work.
+Wrong naming, wrong assumptions, wrong architecture, wrong edge cases, wrong security posture.
+
+So i started asking myself: why does vibe coding feel amazing for some people, but feels like pain for others?
+
+The answer is simple:
+
+**AI sucks at guessing.**
+
+Vibe coding sucks only if you use it like a mind-reader.
+If you give it a vague prompt, it will fill the gaps with assumptions.
+And if you are working in an enterprise-ish codebase, assumptions are expensive.
+
+## What AI actually does (and why it guesses)
+
+Most people treat AI like a “smart engineer” that understands intent.
+In reality, it is more like a super fast pattern matcher that tries to produce something that *looks* correct.
+
+So when you say:
+
+> “Add auth to my app”
+
+AI has to guess:
+- what kind of auth? session? JWT? OAuth? magic link?
+- where is the user stored?
+- do you have roles?
+- what pages are protected?
+- what is your existing architecture?
+- what is your style and conventions?
+
+If you don't answer those questions, it will answer them for you.
+And that is why you get code that “works”, but doesn't belong in your codebase.
+
+## The rule: context is a feature
+
+When you vibe code, you are not just asking for code.
+You are doing requirements + design + implementation in one go.
+
+If you want good output, you need to provide a small “context pack”.
+Not a huge document. Just enough to remove guessing.
+
+Here is what i learned to include almost every time.
+
+### 1) The goal (what is success?)
+
+Be specific. Not “build a blog page”, but:
+- “Add a blog list page that renders posts from `app/blog/posts/*.mdx`.”
+- “Show title, published date, summary.”
+- “Sort newest first.”
+
+### 2) Constraints (what must NOT happen?)
+
+This is the part most people skip.
+Constraints are what makes AI stop being creative in the wrong direction.
+
+Examples:
+- “Do not add new dependencies.”
+- “Keep changes minimal; do not refactor unrelated files.”
+- “Follow existing naming and file structure.”
+- “TypeScript only.”
+- “No hard-coded secrets or keys.”
+
+### 3) Existing conventions (how we do things here)
+
+This one matters a lot in real-world codebases.
+Tell the AI your rules:
+- where domain logic goes
+- where UI logic goes
+- how errors are handled
+- how you structure components
+
+In enterprise codebases, the difference between “works” and “maintainable” is mostly conventions.
+
+### 4) Edge cases
+
+If you care about edge cases, say it.
+
+Examples:
+- empty state
+- loading state
+- invalid input
+- unexpected data from the API
+- time zone and date formatting
+
+### 5) How to verify (tests or steps)
+
+If you don't define verification, you will end up in “looks good” land.
+Even if you don't have a test suite, at least provide manual acceptance criteria.
+
+Examples:
+- “When there are no posts, show an empty message.”
+- “The build should pass `pnpm lint` and `pnpm build`.”
+
+## The loop i use (to avoid AI chaos)
+
+When i vibe code now, i follow a loop. It keeps things fun, but still safe.
+
+1. **Ask for a plan first**
+	- “Give me a 5-step plan and call out risks.”
+2. **Ask for a minimal diff**
+	- “Only change the files needed. No refactors.”
+3. **Ask it to list assumptions**
+	- “If something is ambiguous, ask me 3 questions.”
+4. **Ask for tests or at least test cases**
+	- “Write unit tests or describe how to test manually.”
+5. **Review like you review a junior dev**
+	- you still own the code
+6. **Run the checks**
+	- build, lint, typecheck
+
+The vibe stays, but the output becomes predictable.
+
+## A prompt template that actually works
+
+If you want something practical, here is a template i reuse.
+
+```text
+You are helping me implement a change in an existing codebase.
+
+Goal:
+- ...
+
+Context:
+- Framework: Next.js App Router
+- Language: TypeScript
+- Styling: Tailwind
+- Existing patterns: ... (short bullets)
+
+Constraints:
+- Do not add new dependencies
+- Do not refactor unrelated code
+- Keep changes minimal
+
+Acceptance criteria:
+- ...
+
+Before coding:
+1) List any assumptions you are making
+2) Ask up to 3 clarifying questions if needed
+3) Propose a step-by-step plan
+
+Then:
+- Provide the code changes
+- Explain what you changed and why
+```
+
+Notice something? The template is not “smart”.
+It is boring.
+And boring prompts produce reliable code.
+
+## Where vibe coding shines (and where it doesn't)
+
+I still think vibe coding is useful.
+Just don't use it for the wrong thing.
+
+It shines when:
+- you already know what you want
+- you need a quick first draft
+- you want to explore multiple approaches fast
+- you want help writing tests, docs, or refactoring in small pieces
+
+It fails when:
+- your requirements are unclear
+- you are doing security-sensitive work without deep review
+- you let it change too many files at once
+- you treat “it compiles” as “it is correct”
+
+## If you work like me (enterprise-ish mindset)
+
+The biggest mindset shift is: **AI is not replacing your standards.**
+It is just speeding up the parts you already know how to do.
+
+So keep your standards:
+- small, reviewable changes
+- consistent architecture
+- good naming
+- clear boundaries
+- tests (or at least test cases)
+
+If the AI output breaks your standards, that is not “innovation”.
+That is technical debt arriving early.
+
+## Conclusion
+
+Vibe coding is fun.
+But vibe coding without context is just guessing.
+
+If you want the vibe without the pain:
+- give context
+- give constraints
+- define success
+- review like an engineer
+
+AI is extremely good at helping you move fast.
+But it is still your job to decide *where* to go.
