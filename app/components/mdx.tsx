@@ -12,6 +12,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import remarkToc from 'remark-toc'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
+import { slugify } from 'app/blog/utils'
 
 function Table({ data }) {
   let headers = data.headers.map((header, index) => (
@@ -66,23 +67,29 @@ function Pre({ children, ...props }) {
   return <pre {...props}>{children}</pre>
 }
 
-function slugify(str) {
-  return str
-    .toString()
-    .toLowerCase()
-    .trim() // Remove whitespace from both ends of a string
-    .replace(/\s+/g, '-') // Replace spaces with -
-    .replace(/&/g, '-and-') // Replace & with 'and'
-    .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
-    .replace(/\-\-+/g, '-') // Replace multiple - with single -
+function getHeadingText(children) {
+  return React.Children.toArray(children)
+    .map((child) => {
+      if (typeof child === 'string' || typeof child === 'number') {
+        return String(child)
+      }
+
+      if (React.isValidElement(child)) {
+        return getHeadingText(child.props.children)
+      }
+
+      return ''
+    })
+    .join('')
+    .trim()
 }
 
 function createHeading(level) {
   const Heading = ({ children }) => {
-    let slug = slugify(children)
+    let slug = slugify(getHeadingText(children))
     return React.createElement(
       `h${level}`,
-      { id: slug },
+      { id: slug, className: 'scroll-mt-24' },
       [
         React.createElement('a', {
           href: `#${slug}`,

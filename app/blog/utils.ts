@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import React from 'react'
 
 type Metadata = {
   title: string
@@ -7,6 +8,47 @@ type Metadata = {
   summary: string
   image?: string
   tags?: string[]
+}
+
+export type BlogHeading = {
+  id: string
+  title: string
+  level: number
+}
+
+export function slugify(value: string) {
+  return value
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/&/g, '-and-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+}
+
+function getNodeText(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') {
+    return String(node)
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(getNodeText).join('')
+  }
+
+  if (React.isValidElement(node)) {
+    return getNodeText(node.props.children)
+  }
+
+  return ''
+}
+
+function cleanHeadingText(value: string) {
+  return value
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/[*_~]/g, '')
+    .trim()
 }
 
 function parseFrontmatter(fileContent: string) {
@@ -84,6 +126,42 @@ function getMDXData(dir) {
 
 export function getBlogPosts() {
   return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
+}
+
+export function extractBlogHeadings(content: string) {
+  let headings: BlogHeading[] = []
+  let inCodeBlock = false
+
+  content.split('\n').forEach((line) => {
+    let trimmed = line.trim()
+
+    if (/^(```|~~~)/.test(trimmed)) {
+      inCodeBlock = !inCodeBlock
+      return
+    }
+
+    if (inCodeBlock) {
+      return
+    }
+
+    let match = /^(#{2,3})\s+(.+?)\s*$/.exec(trimmed)
+    if (!match) {
+      return
+    }
+
+    let title = cleanHeadingText(getNodeText(match[2]))
+    if (!title) {
+      return
+    }
+
+    headings.push({
+      id: slugify(title),
+      title,
+      level: match[1].length,
+    })
+  })
+
+  return headings
 }
 
 export function formatDate(date: string, includeRelative = false) {

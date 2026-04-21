@@ -1,7 +1,37 @@
 import { notFound } from "next/navigation";
 import { CustomMDX } from "app/components/mdx";
-import { formatDate, getBlogPosts } from "app/blog/utils";
+import { extractBlogHeadings, formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
+
+function ChapterNav({
+  headings,
+}: {
+  headings: Array<{ id: string; title: string; level: number }>;
+}) {
+  if (!headings.length) {
+    return null;
+  }
+
+  return (
+    <aside className="lg:sticky lg:top-24">
+      <p className="font-semibold tracking-tight">Chapters</p>
+      <nav aria-label="Blog chapters" className="mt-3">
+        <ul className="space-y-2">
+          {headings.map((heading) => (
+            <li key={heading.id} className={heading.level === 3 ? "pl-4" : ""}>
+              <a
+                className="text-muted-foreground transition-colors hover:text-foreground"
+                href={`#${heading.id}`}
+              >
+                {heading.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
+}
 
 export async function generateStaticParams() {
   let posts = getBlogPosts();
@@ -69,6 +99,8 @@ export default async function Blog({
     notFound();
   }
 
+  let headings = extractBlogHeadings(post.content);
+
   return (
     <section>
       <script
@@ -93,15 +125,22 @@ export default async function Blog({
           }),
         }}
       />
-      <h1 className="title font-semibold text-2xl tracking-tighter">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm">
-        <p className="text-sm">{formatDate(post.metadata.publishedAt)}</p>
+      <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-8">
+        <div className="mt-8 lg:mt-0 lg:col-start-1 lg:row-start-1">
+          <ChapterNav headings={headings} />
+        </div>
+        <div className="min-w-0 lg:col-start-2 lg:row-start-1">
+          <h1 className="title font-semibold text-2xl tracking-tighter">
+            {post.metadata.title}
+          </h1>
+          <div className="flex justify-between items-center mt-2 mb-8 text-sm">
+            <p className="text-sm">{formatDate(post.metadata.publishedAt)}</p>
+          </div>
+          <article className="prose">
+            <CustomMDX source={post.content} />
+          </article>
+        </div>
       </div>
-      <article className="prose">
-        <CustomMDX source={post.content} />
-      </article>
     </section>
   );
 }
