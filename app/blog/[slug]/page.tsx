@@ -126,7 +126,7 @@ export default async function Blog({
         }}
       />
       <div className="lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-8">
-        <div className="mt-8 lg:mt-0 lg:col-start-1 lg:row-start-1">
+        <div className="mt-8 mb-8 lg:mt-0 lg:col-start-1 lg:row-start-1">
           <ChapterNav headings={headings} />
         </div>
         <div className="min-w-0 lg:col-start-2 lg:row-start-1">
