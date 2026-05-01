@@ -5,11 +5,9 @@
     color: #0f172a;
 }
 
-@media (prefers-color-scheme: dark) {
-    ::selection {
-        background-color: #4c97f8; /* matches dark palette */
-        color: #ffffff;
-    }
+html.dark ::selection {
+    background-color: #4c97f8;
+    color: #ffffff;
 }
 
 :root {
@@ -24,20 +22,29 @@
     --sh-entity: #e25a1c;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --sh-class: #4c97f8;
-        --sh-identifier: white;
-        --sh-keyword: #f47067;
-        --sh-string: #0fa295;
-    }
-    html {
-        color-scheme: dark;
-    }
+html.dark :root {
+    --sh-class: #4c97f8;
+    --sh-identifier: white;
+    --sh-keyword: #f47067;
+    --sh-string: #0fa295;
 }
 
 html {
     min-width: 360px;
+}
+
+/* Dark mode base styles */
+html.dark {
+    color-scheme: dark;
+    @apply bg-neutral-950 text-white;
+}
+
+body {
+    @apply bg-white text-black;
+}
+
+html.dark body {
+    @apply bg-neutral-950 text-white;
 }
 
 .prose .anchor {
