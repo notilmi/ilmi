@@ -1,0 +1,88 @@
+---
+title: "Simpler Framework != Less Complexity"
+publishedAt: "2026-05-01"
+summary: "These days we have these frameworks such as Spring Boot, .NET, & Laravel but are they really eliminating complexities?"
+tags: ["technical", "frameworks"]
+---
+
+## State Of Modern Software Development
+
+These days, basically everywhere you can always see frameworks that promotes 
+
+> "A simplification to software development so you can focus on shipping products instead of focusing on technical things" 
+
+But are they really solving the problem?
+
+## Why Use Framework?
+
+Most of the time when we use frameworks such as Spring Boot, .NET, & Laravel is mainly because we want to avoid to deal with technical things. Let's take example from these frameworks and what they do
+
+1. They handles HTTP Request (`Controllers`)
+2. They provides middlewares to intercept requests (`Middlewares`, `OncePerRequestFilter`)
+3. They simplifies database queries through ORMs (`Spring Data JPA`, `Eloquent`, `EF Core`)
+
+Basically, they simplifies everything that used to annoy us either because it's way too repetitive or too hard to implement.
+
+## But Are There Any Tradeoffs?
+
+Yes, of course. Let's focus on the "simplify" word here.
+
+### The Hidden Cost: Cognitive Load
+
+Frameworks do reduce repetitive code, but they introduce a different kind of complexity—**cognitive load**. Before you can write even a single line of business logic, you need to understand:
+
+- Framework conventions and project structure
+- How dependency injection works
+- Request/response lifecycle
+- Configuration patterns
+- Error handling mechanisms
+
+This is especially true for frameworks like Laravel that rely heavily on folder structure scanning and auto-discovery. A developer new to the framework might spend weeks just understanding the conventions before they can work efficiently.
+
+### Debugging Becomes Harder
+
+When things go wrong, frameworks can be a black box. A simple endpoint might fail because:
+
+- A middleware is rejecting the request silently
+- An annotation is misconfigured
+- The ORM is generating a weird SQL query
+- A service isn't properly registered in the container
+
+Without deep framework knowledge, you're stuck reading documentation or framework source code instead of focusing on your business logic.
+
+### Over-Engineering Simple Problems
+
+Frameworks come with batteries included, which means you're loading a lot of infrastructure for simple use cases. Need a basic HTTP server? You get the entire framework ecosystem whether you use it or not. This adds runtime overhead, deployment complexity, and more dependencies to maintain.
+
+## The Real Complexity Isn't Technical—It's Organizational
+
+Here's the truth: frameworks don't reduce complexity, they **redistribute** it. They trade one type of complexity (low-level networking, serialization, routing) for another type (framework mastery, architectural patterns, mental overhead).
+
+The real benefit of frameworks is that:
+1. Teams can move faster once they're trained
+2. Code becomes more standardized and predictable
+3. Common patterns are already solved
+
+But this only works if your entire team understands the framework deeply.
+
+## When Frameworks Make Sense
+
+- **Large teams** where standardization matters
+- **CRUD-heavy applications** where frameworks shine
+- **Rapid prototyping** when you need speed over minimalism
+- **Domain complexity** that needs structure
+
+## When They're Overkill
+
+- **Microservices** that only do one thing
+- **Real-time systems** where performance matters
+- **Learning projects** where simplicity helps understanding
+- **Small teams** where framework expertise becomes a bottleneck
+
+## The Takeaway
+
+Frameworks are tools, not solutions. They simplify some aspects while complicating others. The question isn't "should I use a framework?" but rather "**what specific complexities am I trying to avoid, and is this framework the right tradeoff?**"
+
+Sometimes the simpler choice is to write explicit, boring code that everyone understands. Other times, the framework's structure saves you from architectural disasters.
+
+Choose consciously.

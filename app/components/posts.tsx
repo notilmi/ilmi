@@ -27,6 +27,11 @@ export function BlogPosts() {
               </p>
               <p className="tracking-tight col-span-3">{post.metadata.title}</p>
             </div>
+            {post.metadata.readingTime && (
+              <p className="text-muted-foreground text-sm">
+                {post.metadata.readingTime} min read
+              </p>
+            )}
           </Link>
         ))}
     </div>

@@ -8,6 +8,7 @@ type Metadata = {
   summary: string
   image?: string
   tags?: string[]
+  readingTime?: number
 }
 
 export type BlogHeading = {
@@ -54,7 +55,12 @@ function cleanHeadingText(value: string) {
 function parseFrontmatter(fileContent: string) {
   let frontmatterRegex = /---\s*([\s\S]*?)\s*---/
   let match = frontmatterRegex.exec(fileContent)
-  let frontMatterBlock = match![1]
+  
+  if (!match) {
+    return { metadata: {} as Metadata, content: fileContent }
+  }
+  
+  let frontMatterBlock = match[1]
   let content = fileContent.replace(frontmatterRegex, '').trim()
   let frontMatterLines = frontMatterBlock.trim().split('\n')
   let metadata: Partial<Metadata> = {}
@@ -101,6 +107,34 @@ function parseFrontmatter(fileContent: string) {
   return { metadata: metadata as Metadata, content }
 }
 
+function calculateReadingTime(content: string): number {
+  // Remove markdown syntax and code blocks
+  let cleanContent = content
+    // Remove code blocks (```...```)
+    .replace(/```[\s\S]*?```/g, '')
+    // Remove inline code
+    .replace(/`[^`]+`/g, '')
+    // Remove markdown links [text](url)
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    // Remove markdown images ![alt](url)
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '')
+    // Remove bold, italic, strikethrough markers
+    .replace(/[*_~]+/g, '')
+    // Remove markdown headings
+    .replace(/^#+\s+/gm, '')
+    // Remove HTML tags
+    .replace(/<[^>]+>/g, '')
+
+  // Count words
+  let wordCount = cleanContent
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 0).length
+
+  // Calculate reading time at 150 WPM, minimum 1 minute
+  return Math.max(1, Math.ceil(wordCount / 150))
+}
+
 function getMDXFiles(dir) {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx')
 }
@@ -112,16 +146,19 @@ function readMDXFile(filePath) {
 
 function getMDXData(dir) {
   let mdxFiles = getMDXFiles(dir)
-  return mdxFiles.map((file) => {
-    let { metadata, content } = readMDXFile(path.join(dir, file))
-    let slug = path.basename(file, path.extname(file))
+  return mdxFiles
+    .map((file) => {
+      let { metadata, content } = readMDXFile(path.join(dir, file))
+      let slug = path.basename(file, path.extname(file))
+      let readingTime = calculateReadingTime(content)
 
-    return {
-      metadata,
-      slug,
-      content,
-    }
-  })
+      return {
+        metadata: { ...metadata, readingTime },
+        slug,
+        content,
+      }
+    })
+    .filter((post) => post.metadata.title && post.metadata.publishedAt)
 }
 
 export function getBlogPosts() {
@@ -198,4 +235,40 @@ export function formatDate(date: string, includeRelative = false) {
   }
 
   return `${fullDate} (${formattedDate})`
+}
+
+export function getAllTags() {
+  let posts = getBlogPosts()
+  let tagSet = new Set<string>()
+
+  posts.forEach((post) => {
+    if (post.metadata.tags && Array.isArray(post.metadata.tags)) {
+      post.metadata.tags.forEach((tag) => {
+        tagSet.add(tag.toLowerCase())
+      })
+    }
+  })
+
+  return Array.from(tagSet).sort()
+}
+
+export function getPostsByTag(tag: string) {
+  let posts = getBlogPosts()
+  return posts
+    .filter((post) => {
+      if (!post.metadata.tags || !Array.isArray(post.metadata.tags)) {
+        return false
+      }
+      return post.metadata.tags.some(
+        (t) => t.toLowerCase() === tag.toLowerCase()
+      )
+    })
+    .sort((a, b) => {
+      if (
+        new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)
+      ) {
+        return -1
+      }
+      return 1
+    })
 }

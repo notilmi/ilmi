@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { CustomMDX } from "app/components/mdx";
+import { PostTags } from "app/components/post-tags";
 import { extractBlogHeadings, formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 
@@ -135,7 +136,13 @@ export default async function Blog({
           </h1>
           <div className="flex justify-between items-center mt-2 mb-8 text-sm">
             <p className="text-sm">{formatDate(post.metadata.publishedAt)}</p>
+            {post.metadata.readingTime && (
+              <p className="text-muted-foreground text-sm">
+                {post.metadata.readingTime} min read
+              </p>
+            )}
           </div>
+          <PostTags tags={post.metadata.tags} />
           <article className="prose">
             <CustomMDX source={post.content} />
           </article>
